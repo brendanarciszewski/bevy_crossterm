@@ -1,4 +1,4 @@
-use bevy::app::{AppBuilder, CoreStage, Plugin, PluginGroup, PluginGroupBuilder};
+use bevy::app::{App, CoreStage, Plugin, PluginGroup, PluginGroupBuilder};
 use bevy::asset::{AddAsset, AssetPlugin};
 use bevy::core::CorePlugin;
 use bevy::diagnostic::DiagnosticsPlugin;
@@ -18,7 +18,7 @@ pub const POST_RENDER: &str = "post_render";
 #[derive(Default)]
 pub struct CrosstermPlugin;
 impl Plugin for CrosstermPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.insert_resource(Cursor::default())
             .insert_resource(components::PreviousEntityDetails::default())
             .insert_resource(components::EntitiesToRedraw::default())

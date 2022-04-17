@@ -259,7 +259,7 @@ impl StyleMap {
     }
 }
 
-#[derive(Eq, PartialEq, Debug)]
+#[derive(Eq, PartialEq, Debug, Component)]
 pub struct Visible {
     pub is_visible: bool,
     pub is_transparent: bool,
@@ -373,7 +373,7 @@ impl Sprite {
     }
 }
 
-#[derive(Default, Eq, PartialEq, Debug)]
+#[derive(Default, Eq, PartialEq, Debug, Component)]
 pub struct Position {
     pub x: i32,
     pub y: i32,
