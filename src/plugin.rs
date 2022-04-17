@@ -36,11 +36,11 @@ impl Plugin for CrosstermPlugin {
             .add_stage_before(CoreStage::Last, PRE_RENDER, SystemStage::parallel())
             .add_stage_after(PRE_RENDER, RENDER, SystemStage::parallel())
             .add_stage_after(RENDER, POST_RENDER, SystemStage::parallel())
-            .add_system_to_stage(CoreStage::PostUpdate, systems::add_previous_position.system())
+            .add_system_to_stage(CoreStage::PostUpdate, systems::add_previous_position)
             // Needs asset events, and they aren't created until after POST_UPDATE, so we put them in PRE_RENDER
-            .add_system_to_stage(PRE_RENDER, systems::calculate_entities_to_redraw.system())
-            .add_system_to_stage(RENDER, systems::crossterm_render.system())
-            .add_system_to_stage(POST_RENDER, systems::update_previous_position.system());
+            .add_system_to_stage(PRE_RENDER, systems::calculate_entities_to_redraw)
+            .add_system_to_stage(RENDER, systems::crossterm_render)
+            .add_system_to_stage(POST_RENDER, systems::update_previous_position);
     }
 }
 

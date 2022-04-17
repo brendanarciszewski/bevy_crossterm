@@ -1,6 +1,7 @@
 use std::{io::Write, time};
 
-use bevy::app::{App, AppExit, Events, RunMode, ScheduleRunnerSettings};
+use bevy::app::{App, AppExit, RunMode, ScheduleRunnerSettings};
+use bevy::ecs::event::Events;
 use bevy::window::{WindowCreated, WindowId, WindowResized};
 use crossterm::{
     cursor, event,

@@ -1,6 +1,6 @@
 use std::{convert::TryInto, io::Write};
 
-use bevy::app::Events;
+use bevy::ecs::event::Events;
 use bevy::prelude::*;
 use bevy::utils::HashSet;
 use bevy::window::WindowResized;
