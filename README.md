@@ -35,8 +35,8 @@ See the [examples](examples/) for runnable code and detailed comments.
 
 ```toml
 [dependencies]
-bevy = { version = "0.4", default-features = false }
-bevy_crossterm = "0.4.0"
+bevy = { version = "0.7", default-features = false }
+bevy_crossterm = "0.7"
 ```
 
 ```rust
@@ -47,14 +47,14 @@ pub fn main() {
     let mut settings = CrosstermWindowSettings::default();
     settings.set_title("Hello, World!");
 
-    App::build()
+    App::new()
         // Add our window settings
         .insert_resource(settings)
         // Add the DefaultPlugins before the CrosstermPlugin. The crossterm plugin needs bevy's asset server, and if it's
         // not available you'll trigger an assert
         .add_plugins(DefaultPlugins)
         .add_plugin(CrosstermPlugin)
-        .add_startup_system(startup_system.system())
+        .add_startup_system(startup_system)
         .run();
 }
 

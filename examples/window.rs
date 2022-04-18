@@ -10,7 +10,7 @@ pub fn main() {
     let mut settings = CrosstermWindowSettings::default();
     settings.set_title("Window example");
 
-    App::build()
+    App::new()
         // Add our window settings
         .insert_resource(settings)
         // Set some options in bevy to make our program a little less resource intensive - it's just a terminal game
@@ -20,7 +20,7 @@ pub fn main() {
         // possible - 20 fps should be more than enough for a scene that never changes
         .insert_resource(ScheduleRunnerSettings::run_loop(time::Duration::from_millis(50)))
         .add_plugins(DefaultCrosstermPlugins)
-        .add_startup_system(startup_system.system())
+        .add_startup_system(startup_system)
         .run();
 }
 

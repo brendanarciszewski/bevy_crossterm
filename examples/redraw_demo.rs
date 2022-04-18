@@ -1,6 +1,7 @@
 use std::time;
 
-use bevy::app::{AppExit, Events, ScheduleRunnerSettings};
+use bevy::app::{AppExit, ScheduleRunnerSettings};
+use bevy::ecs::event::Events;
 use bevy::prelude::*;
 
 use bevy_crossterm::prelude::*;
@@ -20,21 +21,22 @@ pub fn main() {
     let mut settings = CrosstermWindowSettings::default();
     settings.set_title("Redraw example");
 
-    App::build()
+    App::new()
         .insert_resource(settings)
         .insert_resource(DefaultTaskPoolOptions::with_num_threads(1))
         // 60Hz update is probably a bit gratuitous for this but eh
         .insert_resource(ScheduleRunnerSettings::run_loop(time::Duration::from_millis(16)))
         .insert_resource(Timer::new(std::time::Duration::from_millis(250), true))
         .add_plugins(DefaultCrosstermPlugins)
-        .add_startup_system(startup_system.system())
-        .add_system(update.system())
+        .add_startup_system(startup_system)
+        .add_system(update)
         .run();
 }
 
 // 5x5 box of spaces
 static BIG_BOX: &str = "       \n       \n       ";
 
+#[derive(Component)]
 struct Tag;
 
 fn startup_system(mut commands: Commands, window: Res<CrosstermWindow>, mut cursor: ResMut<Cursor>, mut sprites: ResMut<Assets<Sprite>>, mut stylemaps: ResMut<Assets<StyleMap>>) {

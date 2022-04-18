@@ -1,8 +1,10 @@
-use bevy::app::{AppExit, Events};
+use bevy::app::AppExit;
+use bevy::ecs::event::Events;
 use bevy::prelude::*;
 
 use bevy_crossterm::prelude::*;
 
+#[derive(Component)]
 pub struct Velocity {
     pub x: i32,
     pub y: i32,

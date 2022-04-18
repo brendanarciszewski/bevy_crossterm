@@ -27,7 +27,7 @@ pub fn main() {
     let mut settings = CrosstermWindowSettings::default();
     settings.set_title("Assets example");
 
-    App::build()
+    App::new()
         // Add our window settings
         .insert_resource(settings)
         // Set some options in bevy to make our program a little less resource intensive - it's just a terminal game
@@ -37,9 +37,9 @@ pub fn main() {
         // possible - 20 fps should be more than enough for a scene that never changes
         .insert_resource(ScheduleRunnerSettings::run_loop(time::Duration::from_millis(50)))
         .add_state(GameState::Loading)
-        .add_system_set(SystemSet::on_enter(GameState::Loading).with_system(loading_system.system()))
-        .add_system_set(SystemSet::on_update(GameState::Loading).with_system(check_for_loaded.system()))
-        .add_system_set(SystemSet::on_enter(GameState::Running).with_system(create_entities.system()))
+        .add_system_set(SystemSet::on_enter(GameState::Loading).with_system(loading_system))
+        .add_system_set(SystemSet::on_update(GameState::Loading).with_system(check_for_loaded))
+        .add_system_set(SystemSet::on_enter(GameState::Running).with_system(create_entities))
         .add_plugins(DefaultCrosstermPlugins)
         .run();
 }

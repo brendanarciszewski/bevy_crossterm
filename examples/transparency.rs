@@ -10,13 +10,13 @@ pub fn main() {
     let mut settings = CrosstermWindowSettings::default();
     settings.set_title("Transparency example");
 
-    App::build()
+    App::new()
         .insert_resource(settings)
         .insert_resource(DefaultTaskPoolOptions::with_num_threads(1))
         .insert_resource(ScheduleRunnerSettings::run_loop(time::Duration::from_millis(6)))
         .insert_resource(Timer::new(time::Duration::from_millis(10), true))
         .add_plugins(DefaultCrosstermPlugins)
-        .add_startup_system(startup_system.system())
+        .add_startup_system(startup_system)
         .run();
 }
 
