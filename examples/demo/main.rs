@@ -105,7 +105,7 @@ pub fn detect_keypress(keys: &ResMut<Events<KeyEvent>>) -> bool {
 }
 
 // Simple update function that most screens will use
-pub fn just_wait_and_advance(mut state: ResMut<State<GameState>>, mut app_exit: ResMut<Events<AppExit>>, mut keys: ResMut<Events<KeyEvent>>, mut commands: Commands, mut scene_root: ResMut<Entity>) {
+pub fn just_wait_and_advance(mut state: ResMut<State<GameState>>, mut app_exit: ResMut<Events<AppExit>>, mut keys: ResMut<Events<KeyEvent>>, commands: Commands, scene_root: ResMut<Entity>) {
     if detect_keypress(&keys) {
         if let Some(next_stage) = state.current().next_state() {
             state.push(next_stage).unwrap();

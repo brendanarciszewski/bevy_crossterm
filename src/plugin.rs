@@ -1,7 +1,8 @@
-use bevy::app::{App, CoreStage, Plugin, PluginGroup, PluginGroupBuilder};
-use bevy::asset::{AddAsset, AssetPlugin};
+use bevy::app::{App, Plugin, PluginGroup, PluginGroupBuilder};
+use bevy::asset::{AddAsset, AssetPlugin, AssetStage};
 use bevy::core::CorePlugin;
 use bevy::diagnostic::DiagnosticsPlugin;
+use bevy::hierarchy::HierarchyPlugin;
 use bevy::log::LogPlugin;
 use bevy::prelude::*;
 use bevy::transform::prelude::TransformPlugin;
@@ -11,9 +12,7 @@ use crossterm::event;
 
 use super::{asset_loaders, components, cursor::Cursor, runner, systems};
 
-pub const PRE_RENDER: &str = "pre_render";
 pub const RENDER: &str = "render";
-pub const POST_RENDER: &str = "post_render";
 
 #[derive(Default)]
 pub struct CrosstermPlugin;
@@ -31,16 +30,17 @@ impl Plugin for CrosstermPlugin {
             .add_event::<event::MouseEvent>()
             .set_runner(runner::crossterm_runner)
             // Systems and stages
-            // This must be before LAST because change tracking is cleared during LAST, but AssetEvents are published
-            // after POST_UPDATE. The timing for all these things is pretty delicate
-            .add_stage_before(CoreStage::Last, PRE_RENDER, SystemStage::parallel())
-            .add_stage_after(PRE_RENDER, RENDER, SystemStage::parallel())
-            .add_stage_after(RENDER, POST_RENDER, SystemStage::parallel())
-            .add_system_to_stage(CoreStage::PostUpdate, systems::add_previous_position)
-            // Needs asset events, and they aren't created until after POST_UPDATE, so we put them in PRE_RENDER
-            .add_system_to_stage(PRE_RENDER, systems::calculate_entities_to_redraw)
-            .add_system_to_stage(RENDER, systems::crossterm_render)
-            .add_system_to_stage(POST_RENDER, systems::update_previous_position);
+            // This must be before CoreStage::Last because change tracking is cleared then, but AssetEvents are
+            // published after PostUpdate. The timing for all these things is pretty delicate
+            .add_stage_after(AssetStage::AssetEvents, RENDER, SystemStage::parallel())
+            .add_system(systems::add_previous_position)
+            .add_system_set_to_stage(
+                RENDER,
+                SystemSet::new()
+                    .with_system(systems::calculate_entities_to_redraw)
+                    .with_system(systems::crossterm_render.after(systems::calculate_entities_to_redraw))
+                    .with_system(systems::update_previous_position.after(systems::crossterm_render)),
+            );
     }
 }
 
@@ -55,6 +55,7 @@ impl PluginGroup for DefaultCrosstermPlugins {
         group.add(LogPlugin::default());
         group.add(CorePlugin::default());
         group.add(TransformPlugin::default());
+        group.add(HierarchyPlugin::default());
         group.add(DiagnosticsPlugin::default());
         group.add(WindowPlugin::default());
         group.add(AssetPlugin::default());
